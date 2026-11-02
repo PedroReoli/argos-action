@@ -78,13 +78,20 @@ def main():
     formatted_dataset = dataset.map(format_prompts, batched=True)
     
     # 4. Hiperparâmetros de Treinamento
-    training_args = TrainingArguments(
+    try:
+        from trl import SFTConfig
+    except ImportError:
+        from transformers import TrainingArguments as SFTConfig
+
+    training_args = SFTConfig(
         output_dir=OUTPUT_DIR,
+        dataset_text_field="text",
+        max_length=1536,
         per_device_train_batch_size=4,
         gradient_accumulation_steps=4,
         learning_rate=2e-4,
         lr_scheduler_type="cosine",
-        warmup_ratio=0.03,
+        warmup_steps=10,
         num_train_epochs=3,
         logging_steps=10,
         save_strategy="epoch",
@@ -98,16 +105,26 @@ def main():
     )
     
     # 5. Trainer
-    trainer = SFTTrainer(
-        model=model,
-        train_dataset=formatted_dataset["train"],
-        eval_dataset=formatted_dataset["test"],
-        peft_config=peft_config,
-        dataset_text_field="text",
-        max_seq_length=1536,
-        tokenizer=tokenizer,
-        args=training_args
-    )
+    try:
+        trainer = SFTTrainer(
+            model=model,
+            train_dataset=formatted_dataset["train"],
+            eval_dataset=formatted_dataset["test"],
+            peft_config=peft_config,
+            processing_class=tokenizer,
+            args=training_args
+        )
+    except TypeError:
+        trainer = SFTTrainer(
+            model=model,
+            train_dataset=formatted_dataset["train"],
+            eval_dataset=formatted_dataset["test"],
+            peft_config=peft_config,
+            dataset_text_field="text",
+            max_seq_length=1536,
+            tokenizer=tokenizer,
+            args=training_args
+        )
     
     print("[ARGOS] Iniciando treinamento LoRA...")
     trainer.train()
