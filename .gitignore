@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+argos-action-1.5b-lora/
+argos-action-1.5b/
+.ipynb_checkpoints/
