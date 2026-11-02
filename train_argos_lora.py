@@ -66,6 +66,12 @@ def main():
     )
     
     model = get_peft_model(model, peft_config)
+    
+    # Garantir que todos os tensores float/trainable estejam em float32 (evita conflito com grad scaler em CUDA)
+    for param in model.parameters():
+        if param.dtype == torch.bfloat16:
+            param.data = param.data.to(torch.float32)
+            
     model.print_trainable_parameters()
     
     # 3. Formatação dos Prompts no padrão ChatML
@@ -97,7 +103,7 @@ def main():
         logging_steps=10,
         save_strategy="epoch",
         eval_strategy="epoch",
-        fp16=True,
+        fp16=False,
         bf16=False,
         optim="paged_adamw_8bit",
         report_to="none",
