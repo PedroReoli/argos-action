@@ -40,7 +40,7 @@ def main():
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16,
+        bnb_4bit_compute_dtype=torch.float16,
         bnb_4bit_use_double_quant=True
     )
     
@@ -48,6 +48,7 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(
         BASE_MODEL,
         quantization_config=bnb_config,
+        torch_dtype=torch.float16,
         device_map="auto",
         trust_remote_code=True
     )
@@ -96,8 +97,8 @@ def main():
         logging_steps=10,
         save_strategy="epoch",
         eval_strategy="epoch",
-        fp16=not torch.cuda.is_bf16_supported(),
-        bf16=torch.cuda.is_bf16_supported(),
+        fp16=True,
+        bf16=False,
         optim="paged_adamw_8bit",
         report_to="none",
         push_to_hub=True,
