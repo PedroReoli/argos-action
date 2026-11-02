@@ -104,13 +104,13 @@ def main():
         hub_model_id=HUB_MODEL_ID
     )
     
-    # 5. Trainer
+    # 5. Trainer (Note: model was already wrapped with get_peft_model, so peft_config=None)
     try:
         trainer = SFTTrainer(
             model=model,
             train_dataset=formatted_dataset["train"],
             eval_dataset=formatted_dataset["test"],
-            peft_config=peft_config,
+            peft_config=None,
             processing_class=tokenizer,
             args=training_args
         )
@@ -119,7 +119,7 @@ def main():
             model=model,
             train_dataset=formatted_dataset["train"],
             eval_dataset=formatted_dataset["test"],
-            peft_config=peft_config,
+            peft_config=None,
             dataset_text_field="text",
             max_seq_length=1536,
             tokenizer=tokenizer,
