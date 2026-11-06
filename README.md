@@ -24,26 +24,25 @@ Frontier general-purpose VLMs (Claude 3.5 Sonnet, GPT-4o) possess strong world k
 
 ---
 
-## 📊 Measured Metrics & Training Specifications
+## 📊 Artifact Specifications & Dataset Census
 
-All metrics below are derived directly from the audited training run (`trainer_state.json`) and dataset census (`data/hashes.json`):
+All specifications below are measured directly on the audited dataset (`data/metadata/hashes.json` revision `ae274fe`) and the published LoRA adapter:
 
-| Metric | Measured Value | Methodology / Context |
+| Specification | Value | Context & Scope |
 | :--- | :---: | :--- |
-| **Base Model** | `Qwen/Qwen2.5-1.5B-Instruct` | 1.54B parameters base |
-| **Fine-Tuning Method** | QLoRA (4-bit NF4) | `bitsandbytes` + `peft` LoRA ($r=16, \alpha=32$) |
-| **Trainable Parameters** | 18,464,768 (BF16) | 392 tensors in attention & MLP projections (~36.9 MB) |
-| **Training Steps / Epochs** | 321 steps / 3.0 epochs | Batch size 4, gradient accumulation 4 (effective 16) |
-| **Training Hardware** | NVIDIA T4 GPU (16 GB) | CUDA 12.2, FP32 adapter parameters, fp16/bf16=False |
-| **Final Convergence Loss** | **0.0092** | SFT cross-entropy loss over ChatML sequences |
-| **Total Tokens Processed** | 1,815,824 tokens | SFTTrainer token throughput |
-| **Dataset Size** | 2,000 samples | 1,700 Train / 300 Strictly Held-Out Test (`data/hashes.json`) |
-| **JSON Schema Conformance** | **100.0%** (2000/2000) | Audited via `evaluate_argos.py` |
-| **Dataset Token Census** | Input: 166 avg • AXTree: 122 avg | Measured with Qwen2.5 tokenizer (max length 1,536) |
-| **Reference Latency** | ~138 ms / step | Empirical baseline on batch=1 NVIDIA T4 GPU |
+| **Base Model** | `Qwen/Qwen2.5-1.5B-Instruct` | 1.54B parameter base checkpoint |
+| **Adapter Architecture** | LoRA BF16 ($r=16, \alpha=32$) | 18,464,768 parameters (392 tensors, ~36.98 MB) |
+| **Target Projections** | 7 attention & MLP layers | `q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj` |
+| **Dataset Size** | 2,000 samples | 1,700 Train / 300 Held-Out Test (`data/metadata/hashes.json`) |
+| **Action Contract** | Single-turn JSON Schema | Strictly `{thought, tool_call: {tool, arguments}, verification_predicate}` |
+| **Dataset Token Census** | Input: **128.4** avg • AXTree: **87.2** avg | Measured population of 2,000 rows (Qwen2.5 tokenizer, `ae274fe`) |
+| **Sequence Token Census** | ChatML: **307.4** avg (max 370) | Assistant JSON: **85.0** avg (max 112) |
+| **Wire Protocol Bridge** | Anthropic MCP JSON-RPC 2.0 | Implemented in `argos_mcp_bridge.py` with method rejection and halt notifications |
 
 > [!NOTE]
-> **Theoretical vs. Dataset Tokens:** The frequently cited *92.2% token reduction* refers to the theoretical contrast between full real-world DOMs (~45,000 tokens) and pruned AXTree trees (~3,500 tokens) in live browser scrapers (e.g., Achilles CDP). In this synthetic training benchmark, samples are intentionally compact (averaging ~122 AXTree tokens) for rapid training efficiency.
+> **Lineage & Evaluation Status:**
+> 1. **Model Weights:** The published adapter weights (`bbed79e` / `9081fe`) were trained on an initial 1,700-sample synthetic dataset. Formal out-of-distribution evaluation against the new disjoint holdout split has not been run.
+> 2. **Theoretical vs. Dataset Tokens:** The arithmetic 92.2% reduction ($1 - 3500/45000$) illustrates the theoretical contrast between full real-world DOMs (~45,000 tokens) and pruned AXTree trees (~3,500 tokens) in live browser scrapers. In this synthetic training benchmark, samples are intentionally compact (averaging 87.2 AXTree tokens).
 
 ---
 
@@ -72,7 +71,7 @@ The dataset is partitioned to prevent data leakage and evaluate held-out general
 * **Training Partition (`data/train.jsonl`):** 1,700 samples across 5 domains (E-Commerce, Enterprise SaaS, DevOps, Windows UIA, Safety).
 * **Held-Out Test Partition (`data/test.jsonl`):** 300 disjoint samples featuring novel goals, multiselect menus, pagination scrolls, and destructive resource barriers that do not appear in training.
 
-### Checksums (`data/hashes.json`)
+### Checksums (`data/metadata/hashes.json`)
 * `train.jsonl` (4,669,033 bytes): `382f0f953fcf7aad758147a2009b6b615d0a7fd2881cbc278828fa28d9a6476a`
 * `test.jsonl` (836,940 bytes): `45f2cf222247abb2536ea2f848c5f59fb0b9c94bf6d7115871c2202247ba50fc`
 

@@ -104,7 +104,9 @@ def run_evaluation():
         }
     }
 
-    out_file = base_dir / "evaluation_summary.json"
+    metadata_dir = base_dir / "metadata"
+    metadata_dir.mkdir(parents=True, exist_ok=True)
+    out_file = metadata_dir / "evaluation_summary.json"
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
 

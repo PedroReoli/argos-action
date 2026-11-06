@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>👁️ Argos-Action-1.5B | Scripted Benchmark Playground & MCP Demo</title>
+  <title>👁️ Argos-Action-1.5B | Interactive Catalog & MCP Protocol Demo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,10 +26,10 @@
           <div class="flex items-center gap-2">
             <h1 class="font-extrabold text-lg tracking-tight text-white">Argos-Action-1.5B</h1>
             <span class="text-xs bg-indigo-500/10 text-indigo-300 font-semibold px-2 py-0.5 rounded-full border border-indigo-500/20">
-              Scripted Benchmark Playground
+              Interactive Catalog & Protocol Playground
             </span>
           </div>
-          <p class="text-xs text-slate-400">Autonomous Computer Use & Model Context Protocol (MCP) Policy</p>
+          <p class="text-xs text-slate-400">Autonomous Computer Use & Model Context Protocol (MCP) Research Prototype</p>
         </div>
       </div>
 
@@ -50,22 +50,22 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
 
-    <!-- TRANSPARENCY NOTICE (P0-01 AUDIT DISCLOSURE) -->
+    <!-- TRANSPARENCY NOTICE -->
     <div class="p-4 rounded-xl border border-indigo-500/30 bg-indigo-950/20 text-indigo-200 text-xs md:text-sm leading-relaxed flex items-start gap-3">
       <span class="text-lg">ℹ️</span>
       <div>
-        <strong class="font-semibold text-white">Aviso de Demonstração (Hugging Face Static Space):</strong>
-        Esta interface é um playground estático documentando trajetórias pré-computadas de benchmark da política <b>Argos-Action-1.5B</b>. Não há backend GPU ativo neste Space. Para inferência ao vivo com os pesos LoRA BF16 sobre o modelo base Qwen 2.5 1.5B, execute o pipeline no Google Colab ou carregue via <code class="bg-indigo-900/50 px-1 py-0.5 rounded">PeftModel</code>.
+        <strong class="font-semibold text-white">Playground Estático de Protocolo (Hugging Face Static Space):</strong>
+        Esta interface é uma vitrine estática demonstrando cenários estruturados do dataset de pesquisa <b>Argos-Action</b> e a conversão de ações para mensagens <b>Model Context Protocol (MCP)</b>. Não há backend GPU ou inferência ao vivo ativa neste Space. Para inferência com o modelo base Qwen 2.5 1.5B acoplado aos adaptadores LoRA, utilize o script de inferência ou o notebook no Google Colab.
       </div>
     </div>
 
     <!-- HERO SECTION -->
     <div class="text-center max-w-3xl mx-auto space-y-2">
       <h2 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-        High-Frequency Computer Use via AXTree
+        Computer Use sobre Árvores de Acessibilidade
       </h2>
       <p class="text-slate-400 text-sm leading-relaxed">
-        Argos-Action é um protótipo de pesquisa em Small Language Model (SLM) treinado para emitir ações estruturadas em <b>Model Context Protocol (MCP)</b> consumindo nós semânticos de <b>Árvore de Acessibilidade (AXTree / Windows UIA)</b>.
+        O projeto investiga o desacoplamento de agentes de Computer Use, utilizando representações semânticas compactas (AXTree / Windows UIA) e ações determinísticas traduzíveis para o protocolo MCP.
       </p>
     </div>
 
@@ -73,16 +73,16 @@
     <div class="space-y-3">
       <div class="flex items-center justify-between">
         <label class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>🎯</span> Cenários de Avaliação (Benchmark Scenarios)
+          <span>🎯</span> Exemplos do Catálogo Sintético de Ações
         </label>
-        <span class="text-xs text-indigo-400 font-medium">100% JSON Schema Adherence</span>
+        <span class="text-xs text-indigo-400 font-medium font-mono">Format: Single-turn JSON Schema</span>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
         <button onclick="loadPreset('ecommerce')" class="preset-btn group p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 hover:border-indigo-500/50 transition text-left space-y-1">
           <div class="text-lg">🛒</div>
           <div class="text-xs font-bold text-white group-hover:text-indigo-300">E-Commerce</div>
-          <div class="text-[11px] text-slate-400 truncate">Mechanical Keyboard Query</div>
+          <div class="text-[11px] text-slate-400 truncate">Busca de Produto</div>
         </button>
 
         <button onclick="loadPreset('crm')" class="preset-btn group p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 hover:border-indigo-500/50 transition text-left space-y-1">
@@ -94,19 +94,19 @@
         <button onclick="loadPreset('cloud')" class="preset-btn group p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 hover:border-indigo-500/50 transition text-left space-y-1">
           <div class="text-lg">☁️</div>
           <div class="text-xs font-bold text-white group-hover:text-indigo-300">AWS Console S3</div>
-          <div class="text-[11px] text-slate-400 truncate">Block Public Access</div>
+          <div class="text-[11px] text-slate-400 truncate">Bloqueio de Acesso Público</div>
         </button>
 
         <button onclick="loadPreset('desktop')" class="preset-btn group p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 hover:border-indigo-500/50 transition text-left space-y-1">
           <div class="text-lg">🖥️</div>
           <div class="text-xs font-bold text-white group-hover:text-indigo-300">Windows UIA</div>
-          <div class="text-[11px] text-slate-400 truncate">Save File (Ctrl+S)</div>
+          <div class="text-[11px] text-slate-400 truncate">Atalho Ctrl+S</div>
         </button>
 
         <button onclick="loadPreset('safety')" class="preset-btn group p-3 rounded-xl border border-rose-900/40 bg-rose-950/20 hover:bg-rose-900/30 hover:border-rose-500/50 transition text-left space-y-1">
           <div class="text-lg">🛡️</div>
           <div class="text-xs font-bold text-rose-300 group-hover:text-rose-200">2FA / Guardrail</div>
-          <div class="text-[11px] text-rose-400/80 truncate">Escalate to Human</div>
+          <div class="text-[11px] text-rose-400/80 truncate">Escalação Humana</div>
         </button>
       </div>
     </div>
@@ -119,9 +119,9 @@
         <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 space-y-4 shadow-xl">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <span>📥</span> Input State (AXTree Context)
+              <span>📥</span> Estado de Entrada (AXTree Context)
             </h3>
-            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono" id="tokenCount">~120 tokens</span>
+            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono" id="tokenCount">Snapshot Semântico</span>
           </div>
 
           <div class="space-y-2">
@@ -130,13 +130,13 @@
           </div>
 
           <div class="space-y-2">
-            <label class="text-xs font-semibold text-slate-400">Estado da Árvore de Acessibilidade (AXTree Snapshot):</label>
+            <label class="text-xs font-semibold text-slate-400">Fragmento de Árvore de Acessibilidade (AXTree):</label>
             <textarea id="inputAXTree" rows="9" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-[11px] text-indigo-200/90 font-mono focus:outline-none leading-relaxed"></textarea>
           </div>
 
           <div class="pt-1">
             <button onclick="renderPresetOutput()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
-              <span>🔍</span> Carregar Saída Registrada de Benchmark
+              <span>🔍</span> Atualizar Visualização do Exemplo
             </button>
           </div>
         </div>
@@ -148,22 +148,22 @@
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <div class="flex items-center gap-2">
               <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <span>⚡</span> Resposta Estruturada da Política
+                <span>⚡</span> Contrato Estruturado de Ação
               </h3>
               <span id="badgeActionType" class="text-[11px] font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
                 AUTOMATION_ACTION
               </span>
             </div>
-            <span class="text-xs text-slate-400 font-mono" id="statBenchmarkRef">Ref Latency: ~138ms (T4)</span>
+            <span class="text-xs text-slate-400 font-mono">Wire Protocol: JSON-RPC 2.0</span>
           </div>
 
           <!-- TABS: ARGOS SCHEMA VS MCP WIRE PROTOCOL -->
           <div class="flex border-b border-slate-800 text-xs">
             <button id="tabArgos" onclick="switchTab('argos')" class="py-2 px-3 border-b-2 border-indigo-500 text-white font-semibold">
-              Argos JSON Contract
+              Contrato Interno Argos (JSON)
             </button>
             <button id="tabMCP" onclick="switchTab('mcp')" class="py-2 px-3 text-slate-400 hover:text-slate-200">
-              Anthropic MCP JSON-RPC 2.0
+              Envelope Anthropic MCP Wire
             </button>
           </div>
 
@@ -180,27 +180,27 @@
 
     </div>
 
-    <!-- BENCHMARK TAXONOMY & METRIC DISCLOSURE -->
+    <!-- SPECIFICATIONS DISCLOSURE -->
     <div class="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-5 space-y-3">
-      <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">🔬 Métricas Consolidadas (Ambiente de Treino & Auditoria)</h4>
+      <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">🔬 Especificações dos Artefatos de Pesquisa</h4>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-          <div class="text-slate-400">Loss de Treinamento (SFT)</div>
-          <div class="text-lg font-bold text-white">0.0092</div>
-          <div class="text-[10px] text-slate-500">3 épocas • NVIDIA T4</div>
+          <div class="text-slate-400">Tamanho do Dataset</div>
+          <div class="text-lg font-bold text-white">2.000 amostras</div>
+          <div class="text-[10px] text-slate-500">1.700 Treino / 300 Teste</div>
         </div>
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-          <div class="text-slate-400">Conformidade de Schema</div>
-          <div class="text-lg font-bold text-emerald-400">100.0%</div>
-          <div class="text-[10px] text-slate-500">2.000 amostras auditadas</div>
+          <div class="text-slate-400">Formato das Ações</div>
+          <div class="text-lg font-bold text-emerald-400">Strict JSON</div>
+          <div class="text-[10px] text-slate-500">thought, tool_call, predicate</div>
         </div>
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-          <div class="text-slate-400">Tokens AXTree (Média)</div>
-          <div class="text-lg font-bold text-indigo-400">~122 tokens</div>
-          <div class="text-[10px] text-slate-500">Máx: 174 tokens</div>
+          <div class="text-slate-400">Média de Tokens AXTree</div>
+          <div class="text-lg font-bold text-indigo-400">87.2 tokens</div>
+          <div class="text-[10px] text-slate-500">Censo medido no dataset</div>
         </div>
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-          <div class="text-slate-400">Tamanho do Adaptador LoRA</div>
+          <div class="text-slate-400">Adaptador LoRA</div>
           <div class="text-lg font-bold text-violet-400">36.98 MB</div>
           <div class="text-[10px] text-slate-500">18.46M parâmetros (BF16)</div>
         </div>
@@ -211,7 +211,7 @@
 
   <!-- FOOTER -->
   <footer class="border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500">
-    <p>Argos-Action-1.5B • Desenvolvido por <strong>Pedro Lucas Reis</strong> • Licença Apache-2.0</p>
+    <p>Argos-Action-1.5B • Pesquisa em SLMs para Computer Use • Licença Apache-2.0</p>
   </footer>
 
   <script>
@@ -385,9 +385,12 @@
         mcp_wire: {
           jsonrpc: "2.0",
           id: "argos_mcp_0005",
-          method: "tools/call",
+          method: "notifications/safety/escalation",
           params: {
-            name: "mcp_safety_escalate_to_human",
+            status: "EXECUTION_HALTED",
+            action_required: "human_operator_authorization",
+            reason: "TWO_FACTOR_AUTHENTICATION_REQUIRED",
+            details: "Payment authorization of R$ 25,000 requires external OTP",
             arguments: {
               reason: "TWO_FACTOR_AUTHENTICATION_REQUIRED",
               risk_level: "high",
@@ -396,7 +399,7 @@
           }
         },
         is_escalation: true,
-        reasoning: "GUARDA DE SEGURANÇA DETERMINÍSTICA: Detecção de desafio 2FA/SMS em operação financeira. O modelo bloqueia a automação autônoma e emite escalação explícita para intervenção humana."
+        reasoning: "GUARDA DE SEGURANÇA DETERMINÍSTICA: Detecção de desafio 2FA/SMS em operação financeira. O modelo bloqueia a automação autônoma e emite sinal de interrupção imediata da execução para intervenção humana."
       }
     };
 

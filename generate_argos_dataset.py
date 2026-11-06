@@ -481,13 +481,15 @@ def build_dataset(seed: int = DEFAULT_SEED):
         }
     }
     
-    with open(OUTPUT_DIR / "hashes.json", "w", encoding="utf-8") as f:
+    metadata_dir = OUTPUT_DIR / "metadata"
+    metadata_dir.mkdir(parents=True, exist_ok=True)
+    with open(metadata_dir / "hashes.json", "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
         
     print(f"\n[OK] Dataset generated successfully!")
     print(f"Train: {len(train_data)} rows | {train_bytes} bytes | SHA256: {train_hash[:16]}...")
     print(f"Test (Held-Out): {len(test_data)} rows | {test_bytes} bytes | SHA256: {test_hash[:16]}...")
-    print(f"Manifest written to: {OUTPUT_DIR / 'hashes.json'}")
+    print(f"Manifest written to: {metadata_dir / 'hashes.json'}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Argos-Action Dataset Generator")

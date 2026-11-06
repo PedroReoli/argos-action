@@ -143,10 +143,7 @@ def run_argos_action(intent_text, axtree_text, use_preset_key=None):
         except Exception as e:
             pass
 
-    # Return registered benchmark preset trajectory if model is not loaded in memory
-    t_end = time.perf_counter()
-    measured_ref_latency = 138.4  # Reference benchmark latency measured on batch=1 NVIDIA T4 GPU
-    
+    # Return catalog preset trajectory if model is not loaded in memory
     if matched_preset:
         output_payload = {
             "status": "ESCALATION_REQUIRED" if "escalate" in matched_preset["expected_tool"] else "ACTION_DISPATCHED",
@@ -160,7 +157,7 @@ def run_argos_action(intent_text, axtree_text, use_preset_key=None):
                 "policy_verification": "HUMAN_ESCALATION" if "escalate" in matched_preset["expected_tool"] else "AUTOMATION_POLICY"
             },
             "reasoning_trace": matched_preset["reasoning"],
-            "_execution_mode": "benchmark_recorded_trajectory"
+            "_execution_mode": "catalog_example"
         }
     else:
         output_payload = {
@@ -179,7 +176,7 @@ def run_argos_action(intent_text, axtree_text, use_preset_key=None):
         }
 
     formatted_json = json.dumps(output_payload, indent=2, ensure_ascii=False)
-    return formatted_json, f"{measured_ref_latency:.1f} ms (Ref)", "Argos-Action-1.5B (Benchmark Reference)"
+    return formatted_json, "N/A (Static)", "Argos-Action-1.5B (Catalog Example)"
 
 def on_preset_select(preset_name):
     if not preset_name or preset_name not in PRESETS:

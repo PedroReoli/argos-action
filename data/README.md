@@ -20,6 +20,13 @@ tags:
 - slm
 size_categories:
 - 1K<n<10K
+configs:
+- config_name: default
+  data_files:
+  - split: train
+    path: "train.jsonl"
+  - split: test
+    path: "test.jsonl"
 dataset_info:
   features:
   - name: id
@@ -49,59 +56,66 @@ dataset_info:
 
 # 👁️ Argos: Computer Use & Semantic Tool Calling (MCP) Benchmark
 
-**Argos-Action** is a curated dataset designed for **Supervised Fine-Tuning (SFT)** of Small Language Models (SLMs, e.g., Qwen 2.5 1.5B, Llama 3.2 1B/3B) into specialized **Edge Policy Agents for Autonomous Computer Use**.
+**Argos-Action** is a synthetic single-turn decision dataset designed for research into **Supervised Fine-Tuning (SFT)** of Small Language Models (SLMs, e.g., Qwen 2.5 1.5B, Llama 3.2) into specialized **Edge Policy Agents for Autonomous Computer Use**.
 
 ---
 
-## 🔬 Motivation & Theoretical Framework
+## 🔬 Motivation & Research Scope
 
-Frontier general-purpose LLMs (Claude 3.5 Sonnet, GPT-4o) provide strong reasoning but suffer from operational bottlenecks in high-frequency computer use loops:
-1. **Latency Overhead:** Inference times of 2.5s – 5.0s per step make interactive GUI control sluggish.
-2. **Context Inflation in Real-World DOMs:** Injecting full raw HTML DOM can consume 40,000 to 80,000 tokens per interaction.
-3. **Structured Tool Contracts:** Chat-oriented models require robust alignment to consistently emit valid Model Context Protocol (MCP) JSON schemas without markdown clutter.
+Frontier general-purpose LLMs (Claude 3.5 Sonnet, GPT-4o) provide strong reasoning but face operational challenges in continuous GUI execution loops:
+1. **High Latency Overhead:** Multi-second roundtrips per interaction slow down interactive desktop/web control.
+2. **Context Inflation in Real-World DOMs:** In live web pages, raw HTML DOM trees often reach 40,000 to 80,000 tokens per screen.
+3. **Structured Tool Parsing:** Unconstrained chat models can occasionally emit markdown clutter instead of valid JSON tool calls.
 
-**Theoretical vs. Dataset Representation:**
-* *Theoretical Literature & In-the-Wild Scrape:* Pruning raw web DOM into clean Accessibility Trees (AXTree) reduces token bloat by ~90% in dense web portals.
-* *This Dataset:* Presents concise, pre-pruned semantic accessibility snapshots (averaging ~122 tokens of AXTree per sample) for fast, lightweight policy fine-tuning.
-
----
-
-## 🏛️ Dataset Taxonomy & Domains
-
-The dataset contains **2,000 structured samples** partitioned into **1,700 training samples** and **300 strictly held-out evaluation samples** across five core operational environments:
-
-| Domain | Scope & Workflows | Target Actions |
-| :--- | :--- | :--- |
-| **E-Commerce & Retail** | Search bars, multi-attribute filter facets, cart manipulation, checkout flows | `click`, `type_text`, `select_option`, `scroll` |
-| **Enterprise SaaS & CRM** | Data grids, pipeline kanban transitions, issue creation, reporting exports | `click`, `type_text`, `select_option` |
-| **DevOps & Cloud Consoles** | Cluster pod lifecycle, pull request review & squash merge, bucket ACL enforcement | `click`, `type_text`, `verify_state` |
-| **Native Windows UIA** | File Explorer picker dialogs, desktop settings toggles, print subsystem | `click`, `type_text`, `press_hotkey` |
-| **Safety & Human Escalation** | 2FA/SMS verification, Cloudflare Turnstile CAPTCHA, irreversible data wipe | `escalate_human` |
+**Theoretical vs. Synthetic Dataset Representation:**
+* *Theoretical Contrast (Real-World DOM vs. AXTree):* In live scrapers (e.g. Achilles CDP), pruning raw DOM (~45,000 tokens) into accessibility trees (~3,500 tokens) yields an arithmetic reduction of ~92.2% ($1 - 3500/45000$).
+* *This Synthetic Dataset:* Contains compact, pre-structured accessibility tree fragments designed for lightweight syntax and action policy fine-tuning (averaging **87.2 tokens** of AXTree per sample).
 
 ---
 
-## 📊 Measured Token Census & File Manifest
+## 🏛️ Dataset Taxonomy & Tool Distribution
 
-Measured across the 2,000 samples using the `Qwen/Qwen2.5-1.5B-Instruct` tokenizer:
+The dataset contains **2,000 single-turn decision samples** partitioned into **1,700 training samples** and **300 strictly held-out evaluation samples** across five domains:
 
-| Metric | Average | Maximum |
-| :--- | :---: | :---: |
-| **Input Tokens (`input`)** | 166.3 tokens | 226 tokens |
-| **AXTree Fragment Tokens** | 122.2 tokens | 174 tokens |
-| **Complete ChatML Tokens** | 355.5 tokens | 412 tokens |
-| **Training `max_length` Window** | 1,536 tokens | *(Zero sample truncation)* |
+| Domain | Scope & Scenarios | Train Actions | Test Actions |
+| :--- | :--- | :--- | :--- |
+| **E-Commerce & Retail** | Search bars, price filter facets, cart manipulation, scroll discovery | `click`, `type_text` | `scroll` (60) |
+| **Enterprise SaaS & CRM** | Data grids, pipeline kanban transitions, role selection menus | `click`, `type_text` | `select_option` (60) |
+| **DevOps & Cloud Consoles** | Cluster pod restart, pull request review & squash merge, S3 bucket ACL | `click`, `type_text` | `click` (60) |
+| **Native Windows UIA** | File Explorer picker dialogs, print dialog duplex & copy settings | `click`, `press_hotkey` | `type_text` (60) |
+| **Safety & Human Escalation** | 2FA/SMS verification, Cloudflare Turnstile anti-bot, database wipe guard | `escalate_human` | `escalate_human` (60) |
 
-### SHA-256 Checksums (`data/hashes.json`)
+> [!NOTE]
+> **Tool Distribution Note:** In this dataset version (`ae274fe`), `scroll` (60 samples) and `select_option` (60 samples) are present exclusively in the held-out test split to test generalization on out-of-distribution action schemas. In the training split (1,700 samples), the distribution is: `click` (1,035), `escalate_human` (340), `type_text` (165), and `press_hotkey` (160).
+
+---
+
+## 📊 Measured Token Census (Full Population of 2,000 Rows)
+
+Census measured directly across all 2,000 rows using the `Qwen/Qwen2.5-1.5B-Instruct` tokenizer (`tokenizers` 0.23.3, `add_special_tokens=False`):
+
+| Span / Field | n | Min | p50 | Mean | p95 | Max |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`input` Prompt** | 2,000 | 90 | 127 | **128.4** | 160 | **164** |
+| **AXTree Fragment** | 2,000 | 59 | 83 | **87.2** | 114 | **116** |
+| **Assistant Output JSON** | 2,000 | 71 | 79 | **85.0** | 112 | **112** |
+| **Complete ChatML Sequence** | 2,000 | 262 | 304 | **307.4** | 366 | **370** |
+
+* Training sequence token total (1,700 rows $\times$ 3 epochs): **1,567,626 tokens**.
+
+### SHA-256 Checksums (`metadata/hashes.json`)
 * **`train.jsonl`** (`4,669,033` bytes, 1,700 rows): `382f0f953fcf7aad758147a2009b6b615d0a7fd2881cbc278828fa28d9a6476a`
 * **`test.jsonl`** (`836,940` bytes, 300 rows): `45f2cf222247abb2536ea2f848c5f59fb0b9c94bf6d7115871c2202247ba50fc`
 
-> **Data Leakage Prevention:** The test split (`test.jsonl`) consists of disjoint templates and scenarios (including destructive database deletions, multi-select menus, and pagination scrolls) that never appear in the training partition, providing an honest benchmark for out-of-distribution evaluation.
+### Holdout Independence:
+* Exact overlap between the 300 test inputs/goals and the training set: **0/300**.
+* The test set consists of 5 disjoint templates (each instantiated with variations 60 times) that never appear in the training partition.
 
 ---
 
 ## 📋 Data Format & Structure
 
-Every record includes dual schemas for universal training compatibility: **Alpaca Format** (`instruction`, `input`, `output`) and **OpenAI/ChatML Format** (`messages`):
+Records include dual formats: **Alpaca Format** (`instruction`, `input`, `output`) and **OpenAI/ChatML Format** (`messages`):
 
 ```json
 {
@@ -121,4 +135,7 @@ Every record includes dual schemas for universal training compatibility: **Alpac
 ---
 
 ## 🛡️ Synthetic Fixtures Disclosure
-Security challenge templates include mock identifiers (e.g., `sim-cf-ray-8b29f4c3a012-synthetic` and RFC 5737 documentation IP `192.0.2.45`) strictly generated as synthetic test fixtures for training safe human escalation routines. Zero live user data, credentials, or proprietary tokens are present.
+Security templates include explicit synthetic placeholders:
+* Synthetic Cloudflare Ray ID: `sim-cf-ray-8b29f4c3a012-synthetic` (165 occurrences).
+* Masked synthetic phone number: `(**) *****-4040` (350 occurrences).
+No real user data, production IP addresses, credentials, or private tokens are present.
