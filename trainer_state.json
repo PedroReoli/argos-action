@@ -1,0 +1,63 @@
+{
+  "best_metric": 0.009225,
+  "best_model_checkpoint": "./argos-action-1.5b-lora/checkpoint-321",
+  "epoch": 3.0,
+  "eval_steps": 107,
+  "global_step": 321,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "step": 107,
+      "learning_rate": 0.000185,
+      "loss": 0.009611,
+      "eval_loss": 0.009694,
+      "eval_entropy": 0.014838,
+      "eval_mean_token_accuracy": 0.997083,
+      "eval_num_tokens": 605208.0
+    },
+    {
+      "epoch": 2.0,
+      "step": 214,
+      "learning_rate": 0.000102,
+      "loss": 0.006480,
+      "eval_loss": 0.009409,
+      "eval_entropy": 0.013852,
+      "eval_mean_token_accuracy": 0.997003,
+      "eval_num_tokens": 1210416.0
+    },
+    {
+      "epoch": 3.0,
+      "step": 321,
+      "learning_rate": 0.0,
+      "loss": 0.009204,
+      "eval_loss": 0.009225,
+      "eval_entropy": 0.014107,
+      "eval_mean_token_accuracy": 0.996947,
+      "eval_num_tokens": 1815824.0
+    }
+  ],
+  "logging_steps": 10,
+  "max_steps": 321,
+  "num_input_tokens_seen": 1815824,
+  "num_train_epochs": 3,
+  "total_flos": 1.5838058444288e+16,
+  "train_batch_size": 4,
+  "gradient_accumulation_steps": 4,
+  "effective_batch_size": 16,
+  "hardware": {
+    "accelerator": "NVIDIA T4",
+    "compute_capability": "7.5",
+    "vram_total_gb": 15.0,
+    "cuda_version": "12.2",
+    "precision_setup": {
+      "base_quantization": "4-bit NF4 (bitsandbytes)",
+      "bnb_4bit_compute_dtype": "torch.float16",
+      "trainable_adapter_dtype": "torch.float32",
+      "trainer_fp16": false,
+      "trainer_bf16": false
+    }
+  }
+}

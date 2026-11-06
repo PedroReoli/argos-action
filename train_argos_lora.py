@@ -1,12 +1,22 @@
 """
-Argos-Action-1.5B: LoRA Fine-Tuning Script
+Argos-Action-1.5B: LoRA Fine-Tuning Pipeline
 Base Model: Qwen/Qwen2.5-1.5B-Instruct
 Dataset: pedroreoli/argos-computer-use-mcp
-Target Repo: pedroreoli/argos-action-1.5b
+Target Model: pedroreoli/argos-action-1.5b
 Author: Pedro Lucas Reis (@pedroreoli)
+License: Apache-2.0
+
+Engineering Notes:
+- Base model is quantized on-the-fly to 4-bit NormalFloat (NF4) via BitsAndBytes.
+- LoRA adapters are injected into all 7 attention and MLP projection layers (r=16, alpha=32).
+- Precision stability for NVIDIA T4 (Compute Capability 7.5):
+  Trainable parameters are cast to float32 with fp16=False, bf16=False in Trainer to
+  bypass CUDA GradScaler unscale limitations on Turing architectures.
 """
 
 import os
+import json
+from pathlib import Path
 import torch
 from datasets import load_dataset
 from transformers import (
@@ -36,7 +46,7 @@ def main():
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
         
-    print(f"[ARGOS] Configurando quantização 4-bit (QLoRA)...")
+    print(f"[ARGOS] Configurando quantização 4-bit (QLoRA NF4)...")
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
@@ -67,7 +77,7 @@ def main():
     
     model = get_peft_model(model, peft_config)
     
-    # Garantir que todos os tensores float/trainable estejam em float32 (evita conflito com grad scaler em CUDA)
+    # Garantir que todos os tensores float/trainable estejam em float32 (evita conflito com grad scaler em CUDA T4)
     for param in model.parameters():
         if param.dtype == torch.bfloat16:
             param.data = param.data.to(torch.float32)
@@ -111,7 +121,7 @@ def main():
         hub_model_id=HUB_MODEL_ID
     )
     
-    # 5. Trainer (Note: model was already wrapped with get_peft_model, so peft_config=None)
+    # 5. Trainer
     try:
         trainer = SFTTrainer(
             model=model,
@@ -134,10 +144,15 @@ def main():
         )
     
     print("[ARGOS] Iniciando treinamento LoRA...")
-    trainer.train()
+    train_result = trainer.train()
+    
+    # Salvar métricas e estado do treinamento localmente
+    metrics = train_result.metrics
+    trainer.save_metrics("train", metrics)
+    trainer.save_state()
     
     print("[ARGOS] Treinamento concluído! Enviando adaptadores para o Hugging Face Hub...")
-    trainer.push_to_hub(commit_message="feat(model): publish Argos-Action-1.5B LoRA adapter")
+    trainer.push_to_hub(commit_message="feat(model): publish Argos-Action-1.5B LoRA policy")
     tokenizer.push_to_hub(HUB_MODEL_ID)
     
     print(f"\n[OK] MODELO PUBLICADO COM SUCESSO: https://huggingface.co/{HUB_MODEL_ID}")

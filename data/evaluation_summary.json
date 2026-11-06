@@ -1,0 +1,51 @@
+{
+  "evaluation_protocol": "Argos-Action-Offline-Audit",
+  "train": {
+    "file": "train.jsonl",
+    "total_samples": 1700,
+    "valid_json_rate": 100.0,
+    "schema_conformance_rate": 100.0,
+    "tool_distribution": {
+      "type_text": 165,
+      "click": 1035,
+      "escalate_human": 340,
+      "press_hotkey": 160
+    },
+    "domain_distribution": {
+      "e-commerce": 340,
+      "enterprise_saas": 340,
+      "security_and_edge_cases": 340,
+      "cloud_console": 340,
+      "desktop_windows": 340
+    },
+    "avg_input_characters": 461.9,
+    "avg_output_characters": 380.7
+  },
+  "test_heldout": {
+    "file": "test.jsonl",
+    "total_samples": 300,
+    "valid_json_rate": 100.0,
+    "schema_conformance_rate": 100.0,
+    "tool_distribution": {
+      "type_text": 60,
+      "escalate_human": 60,
+      "click": 60,
+      "select_option": 60,
+      "scroll": 60
+    },
+    "domain_distribution": {
+      "desktop_windows": 60,
+      "security_and_edge_cases": 60,
+      "cloud_console": 60,
+      "enterprise_saas": 60,
+      "e-commerce": 60
+    },
+    "avg_input_characters": 480.4,
+    "avg_output_characters": 379.2
+  },
+  "metric_taxonomy": {
+    "training_loss": "Sequence SFT cross-entropy loss over ChatML tokens",
+    "schema_conformance": "Strict output syntax matching {thought, tool_call: {tool, arguments}, verification_predicate}",
+    "task_success": "End-to-end goal achievement in runtime browser/OS (requires live CDP/UIA harness)"
+  }
+}

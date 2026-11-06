@@ -1,0 +1,18 @@
+{
+  "generator": "generate_argos_dataset.py",
+  "seed": 42,
+  "total_samples": 2000,
+  "splits": {
+    "train": {
+      "num_examples": 1700,
+      "num_bytes": 4669033,
+      "sha256": "382f0f953fcf7aad758147a2009b6b615d0a7fd2881cbc278828fa28d9a6476a"
+    },
+    "test_heldout": {
+      "num_examples": 300,
+      "num_bytes": 836940,
+      "sha256": "45f2cf222247abb2536ea2f848c5f59fb0b9c94bf6d7115871c2202247ba50fc",
+      "holdout_type": "disjoint_templates_and_goals"
+    }
+  }
+}
