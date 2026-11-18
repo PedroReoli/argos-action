@@ -1,0 +1,28 @@
+name: Argos-Action v2.0 CI & Guardrail Audit
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  verify-dataset-bridge-and-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify deterministic dataset synthesis (--seed 42)
+        run: python generate_argos_dataset.py --seed 42
+
+      - name: Verify MCP JSON-RPC 2.0 Bridge & Safety Guardrail (14 checks)
+        run: python argos_mcp_bridge.py
+
+      - name: Run full unittest verification suite
+        run: python -m unittest discover -s tests -v

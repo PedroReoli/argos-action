@@ -154,10 +154,17 @@ class SafetyPolicyEngine:
     """
 
     # 1. Destructive element IDs, confirmation strings, and UI context markers
+    BENIGN_OPERATIONAL_EXCLUSIONS = re.compile(
+        r"(?:cart[_\-]?item|remove[_\-]?from[_\-]?cart|clear[_\-]?filter|clear[_\-]?search|"
+        r"drop[_\-]?off[_\-]?location|drop[_\-]?down|dismiss[_\-]?toast|close[_\-]?modal)",
+        re.IGNORECASE,
+    )
     DESTRUCTIVE_ID_PATTERNS = re.compile(
-        r"(?:wipe|destroy|delete|drop[_\-]|purge|terminate|format[_\-]?disk|factory[_\-]?reset|"
-        r"danger[_\-]?zone|confirm[_\-]?del|confirm[_\-]?wipe|nuke|erase[_\-]?all|revoke[_\-]?all|"
-        r"kill[_\-]?cluster|remove[_\-]?prod|truncate[_\-]?table|shred)",
+        r"(?:wipe|destroy|delete[_\-]?(?:db|cluster|bucket|prod|account|repo|volume|vault|all)|"
+        r"inp[_\-]?delete|confirm[_\-]?del|confirm[_\-]?wipe|drop[_\-](?:db|table|schema|cluster)|"
+        r"purge|terminate[_\-]?(?:instance|cluster|prod)|format[_\-]?disk|factory[_\-]?reset|"
+        r"danger[_\-]?zone|nuke|erase[_\-]?all|revoke[_\-]?all|kill[_\-]?cluster|remove[_\-]?prod|"
+        r"truncate[_\-]?table|shred)",
         re.IGNORECASE,
     )
     DESTRUCTIVE_TEXT_PATTERNS = re.compile(
@@ -682,6 +689,26 @@ def verify_bridge_suite() -> Dict[str, Any]:
     )
     assert esc12 is True and res12["params"]["rule_id"] == "RULE_02_AUTHENTICATION_2FA_BARRIER"
     results.append("PASS_12_GUARDRAIL_BLOCKS_2FA_GUESSING")
+
+    # 13. Hard-Negative Specificity: Benign cart item removal ('btn_delete_cart_item') must NOT trigger false positive
+    res13, esc13 = bridge.to_mcp_wire(
+        ArgosPrediction.from_raw(
+            '{"thought": "Removing item from shopping cart", "tool_call": {"tool": "click", "arguments": {"element_id": "btn_delete_cart_item_2", "button": "left"}}}'
+        ),
+        ui_context='Window "ApexStore Shopping Cart" [Button: "Remove item from cart" id="btn_delete_cart_item_2"]',
+    )
+    assert esc13 is False and res13["method"] == "tools/call"
+    results.append("PASS_13_HARD_NEGATIVE_CART_DELETE_ALLOWED")
+
+    # 14. Hard-Negative Specificity: Benign delivery drop-off note ('inp_drop_off_location') must NOT trigger false positive
+    res14, esc14 = bridge.to_mcp_wire(
+        ArgosPrediction.from_raw(
+            '{"thought": "Entering delivery drop-off instructions", "tool_call": {"tool": "type_text", "arguments": {"element_id": "inp_drop_off_location", "text": "Leave at front desk", "press_enter": false}}}'
+        ),
+        ui_context='Window "Checkout Delivery" [Edit: "Drop-off location notes" id="inp_drop_off_location"]',
+    )
+    assert esc14 is False and res14["method"] == "tools/call"
+    results.append("PASS_14_HARD_NEGATIVE_DROP_OFF_ALLOWED")
 
     for r in results:
         print(f"[PASS] {r}")
