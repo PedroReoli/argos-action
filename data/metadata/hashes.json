@@ -1,18 +1,36 @@
 {
+  "dataset_version": "2.0.0",
   "generator": "generate_argos_dataset.py",
   "seed": 42,
-  "total_samples": 2000,
-  "splits": {
-    "train": {
-      "num_examples": 1700,
-      "num_bytes": 4669033,
-      "sha256": "382f0f953fcf7aad758147a2009b6b615d0a7fd2881cbc278828fa28d9a6476a"
-    },
-    "test_heldout": {
-      "num_examples": 300,
-      "num_bytes": 836940,
-      "sha256": "45f2cf222247abb2536ea2f848c5f59fb0b9c94bf6d7115871c2202247ba50fc",
-      "holdout_type": "disjoint_templates_and_goals"
+  "train": {
+    "file": "train.jsonl",
+    "rows": 1700,
+    "unique_inputs": 1700,
+    "bytes": 6569128,
+    "sha256": "108cf75967da5a8b43b5d77f2b6de54381cfeb3bf5f3ddd658ffa3225b2c49a5",
+    "tool_distribution": {
+      "press_hotkey": 240,
+      "type_text": 280,
+      "scroll": 240,
+      "click": 340,
+      "escalate_human": 340,
+      "select_option": 260
     }
+  },
+  "test": {
+    "file": "test.jsonl",
+    "rows": 300,
+    "unique_inputs": 300,
+    "bytes": 1139642,
+    "sha256": "ecb5e6c334a9e063877743d7ae6f5522b954799d4c1fe61e5a18a5b11e4e7af9",
+    "tool_distribution": {
+      "escalate_human": 60,
+      "scroll": 48,
+      "type_text": 48,
+      "click": 48,
+      "press_hotkey": 48,
+      "select_option": 48
+    },
+    "exact_leakage_with_train": 0
   }
 }

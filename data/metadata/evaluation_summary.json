@@ -1,51 +1,138 @@
 {
-  "evaluation_protocol": "Argos-Action-Offline-Audit",
-  "train": {
-    "file": "train.jsonl",
-    "total_samples": 1700,
-    "valid_json_rate": 100.0,
-    "schema_conformance_rate": 100.0,
-    "tool_distribution": {
-      "type_text": 165,
-      "click": 1035,
-      "escalate_human": 340,
-      "press_hotkey": 160
+  "audit_version": "2.0.0",
+  "scope_notice": "Stage 1 audits dataset/generator labels and token census. Stage 2 audits deterministic MCP JSON-RPC 2.0 bridge & safety guardrail interception. Stage 3 (live model.generate inference) is populated only when executed with --run-model-eval.",
+  "stage_1_dataset_and_generator_audit": {
+    "train": {
+      "file": "train.jsonl",
+      "total_rows": 1700,
+      "unique_inputs": 1700,
+      "unique_goals": 1700,
+      "unique_axtrees": 1700,
+      "unique_target_element_ids": 1120,
+      "label_valid_json": "1700/1700",
+      "label_strict_schema": "1700/1700",
+      "label_valid_tool_arguments": "1700/1700",
+      "tool_distribution": {
+        "click": 340,
+        "escalate_human": 340,
+        "press_hotkey": 240,
+        "scroll": 240,
+        "select_option": 260,
+        "type_text": 280
+      },
+      "domain_distribution": {
+        "cloud_console": 340,
+        "desktop_windows": 340,
+        "e-commerce": 340,
+        "enterprise_saas": 340,
+        "security_and_edge_cases": 340
+      }
     },
-    "domain_distribution": {
-      "e-commerce": 340,
-      "enterprise_saas": 340,
-      "security_and_edge_cases": 340,
-      "cloud_console": 340,
-      "desktop_windows": 340
+    "test_heldout": {
+      "file": "test.jsonl",
+      "total_rows": 300,
+      "unique_inputs": 300,
+      "unique_goals": 300,
+      "unique_axtrees": 300,
+      "unique_target_element_ids": 192,
+      "label_valid_json": "300/300",
+      "label_strict_schema": "300/300",
+      "label_valid_tool_arguments": "300/300",
+      "tool_distribution": {
+        "click": 48,
+        "escalate_human": 60,
+        "press_hotkey": 48,
+        "scroll": 48,
+        "select_option": 48,
+        "type_text": 48
+      },
+      "domain_distribution": {
+        "cloud_console": 60,
+        "desktop_windows": 60,
+        "e-commerce": 60,
+        "enterprise_saas": 60,
+        "security_and_edge_cases": 60
+      }
     },
-    "avg_input_characters": 461.9,
-    "avg_output_characters": 380.7
+    "leakage_and_coverage_verification": {
+      "exact_input_overlap": "0/300",
+      "exact_goal_overlap": "0/300",
+      "exact_axtree_overlap": "0/300",
+      "all_6_tools_in_train": true,
+      "all_6_tools_in_test": true
+    },
+    "token_census_2000": {
+      "tokenizer_model": "Qwen/Qwen2.5-1.5B-Instruct (tokenizers 0.23.3, add_special_tokens=False)",
+      "input_prompt_tokens": {
+        "n": 2000,
+        "min": 93,
+        "p50": 153,
+        "mean": 147.4,
+        "p95": 187,
+        "max": 202
+      },
+      "axtree_fragment_tokens": {
+        "n": 2000,
+        "min": 52,
+        "p50": 87,
+        "mean": 89.6,
+        "p95": 122,
+        "max": 130
+      },
+      "assistant_output_tokens": {
+        "n": 2000,
+        "min": 101,
+        "p50": 127,
+        "mean": 127.6,
+        "p95": 160,
+        "max": 171
+      },
+      "full_chatml_sequence_tokens": {
+        "n": 2000,
+        "min": 383,
+        "p50": 447,
+        "mean": 452.0,
+        "p95": 501,
+        "max": 521
+      }
+    }
   },
-  "test_heldout": {
-    "file": "test.jsonl",
-    "total_samples": 300,
-    "valid_json_rate": 100.0,
-    "schema_conformance_rate": 100.0,
-    "tool_distribution": {
-      "type_text": 60,
-      "escalate_human": 60,
-      "click": 60,
-      "select_option": 60,
-      "scroll": 60
+  "stage_2_mcp_bridge_and_guardrail_audit": {
+    "unit_suite": {
+      "passed": 12,
+      "checks": [
+        "PASS_01_VALID_CLICK",
+        "PASS_02_NOTIFICATION_NO_ID_COMPLIANT",
+        "PASS_03_UNKNOWN_TOOL_-32601",
+        "PASS_04_NON_DICT_ARGS_REJECTED_-32602",
+        "PASS_05_MISSING_REQUIRED_PARAM_-32602",
+        "PASS_06_INVALID_ENUM_PARAM_-32602",
+        "PASS_07_PARSE_ERROR_-32700",
+        "PASS_08_STRING_TOOL_CALL_-32600",
+        "PASS_09_GUARDRAIL_BLOCKS_PROD_DB_AURORA_DELETE",
+        "PASS_10_GUARDRAIL_BLOCKS_DESTRUCTIVE_CLICK",
+        "PASS_11_GUARDRAIL_BLOCKS_PROMPT_INJECTION",
+        "PASS_12_GUARDRAIL_BLOCKS_2FA_GUESSING"
+      ]
     },
-    "domain_distribution": {
-      "desktop_windows": 60,
-      "security_and_edge_cases": 60,
-      "cloud_console": 60,
-      "enterprise_saas": 60,
-      "e-commerce": 60
-    },
-    "avg_input_characters": 480.4,
-    "avg_output_characters": 379.2
+    "heldout_defense_in_depth_simulation": {
+      "gold_labels_valid_mcp_wire": "300/300",
+      "heldout_safety_cases": 60,
+      "simulated_unaligned_model_interception": "60/60",
+      "guardrail_interception_rate": 1.0,
+      "guardrail_interception_wilson_95_ci": [
+        0.9398,
+        1.0
+      ],
+      "interceptions_by_rule": {
+        "RULE_01_DESTRUCTIVE_OPERATION": 10,
+        "RULE_02_AUTHENTICATION_2FA_BARRIER": 10,
+        "RULE_03_ANTIBOT_CAPTCHA_BARRIER": 10,
+        "RULE_04_HIGH_RISK_FINANCIAL_TRANSFER": 10,
+        "RULE_05_UNTRUSTED_PROMPT_INJECTION": 10,
+        "RULE_06_SENSITIVE_PRIVACY_AND_COMPLIANCE": 10
+      }
+    }
   },
-  "metric_taxonomy": {
-    "training_loss": "Sequence SFT cross-entropy loss over ChatML tokens",
-    "schema_conformance": "Strict output syntax matching {thought, tool_call: {tool, arguments}, verification_predicate}",
-    "task_success": "End-to-end goal achievement in runtime browser/OS (requires live CDP/UIA harness)"
-  }
+  "stage_3_live_model_inference_benchmark": null
 }
